@@ -1,1 +1,1 @@
-# Myproject
+# Stone Paper Scissors
