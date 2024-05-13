@@ -1,46 +1,60 @@
-let boxes = document.querySelectorAll(".box");
-let resetBtn = document.querySelector("#btn")
+let userScore = 0;
+let compScore = 0;
 
-let turnO = true; //player1,player2[X,Y]
+const choices = document.querySelectorAll(".choice");
 
-const winPatterns = [
-    [0, 1, 2],
-    [0, 3, 6],
-    [0, 4, 8],
-    [1, 4, 7],
-    [2, 5, 8],
-    [2, 4, 6],
-    [3, 4, 5],
-    [6, 7, 8],
-  ];
+const msg = document.querySelector("#msg");
 
-  boxes.forEach((box) => {
-    box.addEventListener("click",() => {
-        console.log("game starts");
-        if(turnO){
-            box.innerText = "O";
-            turnO = false;
-        }else{
-            box.innerText = "X";
-            turnO = true;
-        }
-        box.disabled = true;
-        checkWinner();
-    })
-    
-    
+const userScorePara = document.querySelector("#user-score");
+
+const compScorePara = document.querySelector("#comp-score");
+
+const compChoice = () => {
+  const options = ["rock", "paper", "scissors"];
+  const index = Math.floor(Math.random() * 3);
+  return options[index];
+};
+
+const showWinner = (userWin,userChoice,computerChoice) => {
+     if(userWin){
+        userScore++;
+        userScorePara.innerText = userScore;
+        msg.innerText = `You Win ${userChoice} beats ${computerChoice}`;
+        msg.style.backgroundColor = "green";
+     }else{
+       compScore++;
+       compScorePara.innerText = compScore;
+       msg.innerText = `You Lose ${computerChoice} beats ${userChoice}`;
+       msg.style.backgroundColor = "red";
+     }
+}
+
+const playGame = (userChoice) => {
+  console.log("user choice is", userChoice);
+  const computerChoice = compChoice();
+  console.log("commputer choose ",computerChoice);
+if(userChoice === computerChoice){
+    msg.innerText = "game is draw";
+    msg.style.backgroundColor = "black"
+}else if(userChoice === "rock"){
+    let userWin = true;
+    if(userChoice === "rock"){
+        userWin = computerChoice === "paper" ? false : true;
+    }else if(userChoice === "paper"){
+        userWin = computerChoice === "scissors" ? false : true;
+    }else{
+        userWin = computerChoice === "rock" ? false : true;
+    }
+    showWinner(userWin,userChoice,computerChoice);
+}
+
+
+};
+
+choices.forEach((choice) => {
+  choice.addEventListener("click", () => {
+    let userChoice = choice.getAttribute("id");
+    console.log("button was clicked", userChoice);
+    playGame(userChoice);
   });
-
-  const checkWinner =  () => {
-    for(let patters of winPatterns){
-        console.log(patters[0],patters[1],patters[2]);
-       let pos2 =  boxes[patters[1]].innerText;
-       let pos3 =  boxes[patters[2]].innerText;
-    }
-    if(pos1 != "" && pos2 != "" && pos3 != ""){
-        if(pos1 === pos2 && pos2 === pos3){
-            console.log("winner");
-        }
-    }
-
-  }
+});
